@@ -1,0 +1,201 @@
+/* styles.css
+ *
+ * Shared stylesheet used by both the generator (index.html) and the
+ * employee card (employee.html). The styles here were crafted
+ * specifically to match the design provided by the user. Colours,
+ * fonts and layout have been kept consistent with the original
+ * emigration clearance card. Feel free to make minor adjustments to
+ * spacing or sizing as additional data is added.
+ */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f7faff;
+  color: #1e293b;
+}
+
+/* Header with government logos and text */
+.header {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header .logo {
+  height: 36px;
+  width: auto;
+}
+
+.gov-text {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.gov-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #065f46; /* deep green */
+}
+
+.gov-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #b91c1c; /* crimson */
+}
+
+/* Main content wrapper */
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Title for the page */
+.page-title {
+  background-color: #eef2f7;
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.page-title .title-bn {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a; /* dark navy */
+}
+
+.page-title .title-en {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #334155;
+  letter-spacing: 0.5px;
+}
+
+/* Card styles shared by all sections */
+.card,
+.section-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 16px 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+/* Profile block */
+.profile {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e2e8f0;
+  margin-bottom: 10px;
+}
+
+.profile h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #0f172a;
+}
+
+.ec-no,
+.ec-date {
+  font-size: 14px;
+  margin: 2px 0;
+  color: #475569;
+  font-weight: 600;
+}
+
+/* Details table layout */
+.details,
+.section-card {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.details-row:last-child {
+  border-bottom: none;
+}
+
+.details-row span:first-child {
+  color: #64748b;
+  flex: 0 0 45%;
+  font-weight: 500;
+}
+
+.details-row span:last-child {
+  color: #334155;
+  flex: 1;
+  text-align: right;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* Special styling for highlighted values such as recruiting agency */
+.highlight-value {
+  color: #1e40af; /* deep blue for emphasis */
+  font-weight: 700;
+}
+
+/* Section heading styles */
+.section {
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.section-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 6px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #15803d; /* green */
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .header .logo {
+    margin-bottom: 8px;
+  }
+  .details-row span:first-child {
+    flex: 0 0 50%;
+  }
+}
