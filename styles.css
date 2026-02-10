@@ -12,8 +12,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #f7faff;
+  font-family: "DejaVu Serif", serif;
+  bbackground: linear-gradient(180deg, #f7faff 0%, #e3eefb 100%);
   color: #1e293b;
 }
 
@@ -38,15 +38,15 @@ body {
 }
 
 .gov-title {
-  font-size: 20px;
-  font-weight: 700;
+ font-size: 18px;
+  
   color: #065f46; /* deep green */
 }
 
 .gov-subtitle {
-  font-size: 14px;
+  font-size: 22px;
   font-weight: 600;
-  color: #b91c1c; /* crimson */
+  color: #b11270;
 }
 
 /* Main content wrapper */
@@ -66,15 +66,15 @@ body {
 }
 
 .page-title .title-bn {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
   margin: 0;
   color: #0f172a; /* dark navy */
 }
 
 .page-title .title-en {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   margin-top: 4px;
   color: #334155;
   letter-spacing: 0.5px;
@@ -109,7 +109,7 @@ body {
 }
 
 .profile h2 {
-  font-size: 22px;
+    font-size: 30px;
   font-weight: 700;
   margin: 0 0 4px;
   color: #0f172a;
@@ -117,7 +117,7 @@ body {
 
 .ec-no,
 .ec-date {
-  font-size: 14px;
+    font-size: 18px;
   margin: 2px 0;
   color: #475569;
   font-weight: 600;
