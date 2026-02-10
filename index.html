@@ -6,6 +6,11 @@
     <title>Employee Card Generator</title>
     <!-- Shared stylesheet for both the generator and the card -->
     <link rel="stylesheet" href="styles.css" />
+    <!-- Cropper.js stylesheet for image cropping -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css"
+    />
     <style>
       /* Generator specific styles */
       .generator {
@@ -68,6 +73,70 @@
         font-weight: 600;
         word-break: break-all;
       }
+
+      /* Drop zone styling for photo uploads */
+      .drop-zone {
+        margin-top: 4px;
+        border: 2px dashed #cbd5e1;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .drop-zone.dragover {
+        background-color: #f1f5f9;
+        border-color: #0ea5e9;
+      }
+
+      /* Simple styles for the cropping modal */
+      #cropContainer {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      #cropContainer .crop-inner {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 90%;
+        max-height: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #cropImage {
+        max-width: 100%;
+        max-height: 70vh;
+      }
+      #cropButtons {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+      #cropButtons button {
+        padding: 6px 12px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      #cropConfirm {
+        background-color: #166534;
+        color: #fff;
+      }
+      #cropCancel {
+        background-color: #e2e8f0;
+        color: #334155;
+      }
     </style>
   </head>
   <body>
@@ -84,12 +153,15 @@
           <input type="text" id="name" required />
         </div>
         <div class="form-group">
-          <label for="ecDate">EC Date (e.g. 30/Sep/2025)</label>
-          <input type="text" id="ecDate" required />
+          <label for="ecDate">EC Date</label>
+          <!-- Use a date input so users can pick the day, month and year
+               from a calendar. The value will be converted to
+               `DD/Mon/YYYY` format when generating the employee JSON. -->
+          <input type="date" id="ecDate" required />
         </div>
         <div class="form-group">
           <label for="birthDate">Birth Date</label>
-          <input type="text" id="birthDate" required />
+          <input type="date" id="birthDate" required />
         </div>
         <div class="form-group">
           <label for="passportNo">Passport No</label>
@@ -97,11 +169,11 @@
         </div>
         <div class="form-group">
           <label for="passportIssueDate">Passport Issue Date</label>
-          <input type="text" id="passportIssueDate" required />
+          <input type="date" id="passportIssueDate" required />
         </div>
         <div class="form-group">
           <label for="passportExpireDate">Passport Expire Date</label>
-          <input type="text" id="passportExpireDate" required />
+          <input type="date" id="passportExpireDate" required />
         </div>
         <div class="form-group">
           <label for="visaNo">Visa No</label>
@@ -109,11 +181,11 @@
         </div>
         <div class="form-group">
           <label for="visaIssueDate">Visa Issue Date</label>
-          <input type="text" id="visaIssueDate" />
+          <input type="date" id="visaIssueDate" />
         </div>
         <div class="form-group">
           <label for="visaExpireDate">Visa Expire Date</label>
-          <input type="text" id="visaExpireDate" />
+          <input type="date" id="visaExpireDate" />
         </div>
         <div class="form-group">
           <label for="referralNo">Referral No</label>
@@ -156,14 +228,63 @@
           <input type="text" id="passportNo1" />
         </div>
         <div class="form-group">
-          <label for="photo">Photo (base64 or file name)</label>
+          <label for="photo">Photo</label>
+          <!-- File picker for the worker's photo. The selected file will be
+               converted to a base64 data URI on submission. We also
+               provide a drop zone to allow drag‑and‑drop uploads. -->
+          <input type="file" id="photoFile" accept="image/*" />
+          <div id="dropZone" class="drop-zone">Drop photo here or click the file field above</div>
+          <!-- Manual entry fallback: if you already have a base64 string you can
+               paste it into this input. Otherwise leave it blank and the
+               uploaded file will be used. -->
           <input type="text" id="photo" placeholder="data:image/png;base64,..." />
+        </div>
+
+        <!-- Logo inputs. These allow the user to upload the left and right
+             logos that appear in the card header and next to the BMET
+             Registration and Passports sections. Each has its own drop
+             zone to allow drag‑and‑drop uploads. -->
+        <div class="form-group">
+          <label for="logoLeftFile"
+            >Left Logo (appears to the left of the government text and next to
+            Passports)</label
+          >
+          <input type="file" id="logoLeftFile" accept="image/*" />
+          <div id="logoLeftDropZone" class="drop-zone">
+            Drop left logo here or click the file field above
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="logoRightFile"
+            >Right Logo (appears to the right of the government text and next to
+            BMET Registration)</label
+         >
+          <input type="file" id="logoRightFile" accept="image/*" />
+          <div id="logoRightDropZone" class="drop-zone">
+            Drop right logo here or click the file field above
+          </div>
         </div>
         <button type="submit">Generate</button>
       </form>
       <textarea id="output" rows="10" placeholder="Your JSON snippet will appear here…"></textarea>
       <div id="link"></div>
     </div>
+
+    <!-- Cropping container used for selecting the crop region of images.  When
+         a user selects a photo or logo file we display this modal and
+         instantiate a Cropper.js instance on the image.  The buttons allow
+         the user to confirm or cancel the crop. -->
+    <div id="cropContainer">
+      <div class="crop-inner">
+        <img id="cropImage" alt="Crop preview" />
+        <div id="cropButtons">
+          <button type="button" id="cropConfirm">Crop</button>
+          <button type="button" id="cropCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
     <script src="index.js"></script>
+    <!-- Cropper.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
   </body>
 </html>
